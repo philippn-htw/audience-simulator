@@ -14,6 +14,11 @@ import java.io.InputStream;
 import java.io.OutputStream; 
 import java.io.IOException; 
 
+/**
+ * Example Use Case of processing sound class
+ * @author Philipp Nitsche
+ *
+ */
 public class MainApplet extends PApplet {
 
 /**
