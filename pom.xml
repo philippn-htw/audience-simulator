@@ -222,6 +222,12 @@
 			<version>1.0.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>net.compartmental.code</groupId>
+			<artifactId>minim</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+
 
 	</dependencies>
 
