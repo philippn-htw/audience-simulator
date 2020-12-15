@@ -1,5 +1,9 @@
 import processing.core.PApplet;
 
+/**
+ * Main Class, starts Processing application
+ *
+ */
 public class Main {
 
 	  
