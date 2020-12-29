@@ -246,6 +246,13 @@
 			<version>1.3.10</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.openimaj</groupId>
+			<artifactId>faces</artifactId>
+			<version>1.3.10</version>
+		</dependency>
+
+
 
 		<dependency>
 			<groupId>com.github.philburk</groupId>
