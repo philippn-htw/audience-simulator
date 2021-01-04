@@ -18,32 +18,65 @@ public class VideoMotionAnalyzer {
 		setRegion(ar, centerWidth);
 	}
 	
+	
+	/**
+	 * Set the regions, that has to be analyzed (left, middle, right)
+	 * @param ar Complete analyzing region above head
+	 * @param centerWidth width of middle Region (head size)
+	 */
 	public void setRegion(Rectangle ar, float centerWidth) {
 		left.setBounds(ar.getTopLeft().getX(), ar.getTopLeft().getY(), ((float)ar.getWidth() / 2f) - (float)(centerWidth/2f), (float)ar.getHeight());
 		right.setBounds( ar.getTopLeft().getX() + (float)(ar.getWidth() / 2f) + (float)centerWidth / 2f , ar.getTopLeft().getY(), ((float)ar.getWidth() / 2f) - (float)(centerWidth/2f), (float)ar.getHeight());
 		middle.setBounds((float)ar.getTopLeft().getX() +  (float)(ar.getWidth() / 2f) - (float)(centerWidth / 2f), ar.getTopLeft().getY(), centerWidth, (float)ar.getHeight());
 	}
 	
+	
+	/**
+	 * Get left region
+	 * @return Rectangle left region
+	 */
 	public Rectangle getLeftRegion() {
 		return left;
 	}
 	
+	/**
+	 * Get right region
+	 * @return Rectangle right region
+	 */
 	public Rectangle getRightRegion() {
 		return right;
 	}
 	
+	/**
+	 * Get right region
+	 * @return Rectangle right region
+	 */
 	public Rectangle getMiddleRegion() {
 		return middle;
 	}
 	
+	/**
+	 * Check if cheering is triggered
+	 * @return true, if cheering is triggered.
+	 */
 	public boolean isCheering() {
 		return cheering;
 	}
 	
+	
+	/**
+	 * Check if clapping is triggered
+	 * @return true, if clapping is triggered.
+	 */
 	public boolean isClapping() {
 		return clapping;
 	}
 	
+	
+	/**
+	 * Analyze and approximate the motion per cycle
+	 * @param bloblist List of tracked blobs in frame
+	 */
 	public void analyzeMotion(ArrayList<TrackingBlob> bloblist) {
 		if (cycleCount>100) {
 			cycleCount = 0;

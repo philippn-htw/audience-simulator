@@ -13,6 +13,7 @@ import org.openimaj.image.colour.Transforms;
 import org.openimaj.image.processing.face.detection.DetectedFace;
 import org.openimaj.image.processing.face.detection.FaceDetector;
 import org.openimaj.image.processing.face.detection.HaarCascadeDetector;
+import org.openimaj.image.processing.resize.ResizeProcessor;
 import org.openimaj.math.geometry.point.Point2d;
 import org.openimaj.math.geometry.shape.Ellipse;
 import org.openimaj.math.geometry.shape.Rectangle;
@@ -25,8 +26,18 @@ public class VideoAnalyzer implements Runnable {
 	private int posY;
 	private int count;
 	private ArrayList<TrackingBlob> bloblist = new ArrayList<>();
+	
+	/**
+	 * analysingRegion is the Region to analyse motion in 
+	 */
 	private Rectangle analysingRegion = new Rectangle(0,0,100,100);
+	
 	private VideoMotionAnalyzer motionAnalyzer = new VideoMotionAnalyzer(analysingRegion, 100);
+	
+	/**
+	 * facePredictionRegion is used to predict the face position by the last known position. This can increase performance.
+	 */
+	private Rectangle facePredictionRegion = new Rectangle();
 
 	/**
 	 * Constructor
@@ -48,6 +59,7 @@ public class VideoAnalyzer implements Runnable {
 	public Device getVideoStream() {
 		return this.captureDevice;
 	}
+	
 
 	/**
 	 * Starts the video capture
@@ -55,9 +67,10 @@ public class VideoAnalyzer implements Runnable {
 	 * @throws VideoCaptureException
 	 */
 	public void startCapture() throws VideoCaptureException {
-		capture = new VideoCapture(320, 240, captureDevice);
+		capture = new VideoCapture(640, 480, captureDevice);
 		analysingRegion.setBounds(capture.getWidth()/4, 0, capture.getWidth() / 2, capture.getHeight()/2);
 	}
+	
 
 	/**
 	 * get the Distance between two RGB color vectors.
@@ -183,14 +196,25 @@ public class VideoAnalyzer implements Runnable {
 	}
 	
 	
+	
 	/**
 	 * Detect Faces in frame
 	 * @param frame
 	 * @return List of faces in frame
 	 */
 	private List<DetectedFace> getFaces(MBFImage frame) {
-		FaceDetector<DetectedFace,FImage> fd = new HaarCascadeDetector(200);
-		List<DetectedFace> faces = fd.detectFaces( Transforms.calculateIntensity(frame));
+		//analyse face prediction region first
+		MBFImage tmp = frame;
+	 	MBFImage predictionFrame = frame.extractROI((int)facePredictionRegion.x,(int)facePredictionRegion.y, (int)facePredictionRegion.getWidth(),(int)facePredictionRegion.getHeight());	 	
+		FaceDetector<DetectedFace,FImage> fd = new HaarCascadeDetector(40);
+		List<DetectedFace> faces = fd.detectFaces(Transforms.calculateIntensity(predictionFrame));
+
+		//if no face found in face prediction region analyse whole frame
+		if(faces.size()<1) {
+			fd = new HaarCascadeDetector(60);
+			faces = fd.detectFaces(Transforms.calculateIntensity(tmp));
+			facePredictionRegion.setBounds(0, 0, tmp.getWidth(), tmp.getHeight());
+		}
 		return faces;
 	}
 	
@@ -216,10 +240,15 @@ public class VideoAnalyzer implements Runnable {
 		// update region to fit main face or keep last known position
 		if(mainFace != null) {
 			Rectangle mainBounds = mainFace.getBounds();
+			
+			//Bounds must be set relative to facePredictionRegion
+			mainBounds.setBounds(mainBounds.x + facePredictionRegion.x, mainBounds.y + facePredictionRegion.y, mainBounds.width, mainBounds.height);
+
 			Point2d currentCenter = mainBounds.calculateCentroid();
-			double analysingWidth = mainBounds.getWidth()*6;
-			analysingRegion.setBounds((float)currentCenter.getX() - (float)(analysingWidth) / 2.0f, 0.0f, (float)analysingWidth, (float)currentCenter.getY());
+			double analysingWidth = mainBounds.getWidth()*8;
+			analysingRegion.setBounds((float)(currentCenter.getX()) - (float)(analysingWidth) / 2.0f, 0.0f, (float)analysingWidth, (float)currentCenter.getY());
 			motionAnalyzer.setRegion(analysingRegion, (float)mainBounds.getWidth());
+			facePredictionRegion.setBounds(mainBounds.x - mainBounds.width, mainBounds.y-mainBounds.height, mainBounds.width*3, mainBounds.height*3);
 		}
 		
 	}
@@ -250,11 +279,14 @@ public class VideoAnalyzer implements Runnable {
 				frame.drawShape(new Rectangle(motionAnalyzer.getRightRegion()), RGBColour.BLUE);
 				frame.drawShape(new Rectangle(motionAnalyzer.getMiddleRegion()), RGBColour.GREEN);
 				
+				frame.drawShape(new Rectangle(facePredictionRegion), RGBColour.RED);
+				
 				if(motionAnalyzer.isClapping()) {
 					frame.drawShapeFilled(new Ellipse(50f,50f,50f,50f,0), RGBColour.ORANGE);
 				} else if (motionAnalyzer.isCheering()) {
 					frame.drawShapeFilled(new Ellipse(50f,50f,50f,50f,0), RGBColour.GREEN);
 				}
+				
 				
 				
 			}
@@ -263,14 +295,23 @@ public class VideoAnalyzer implements Runnable {
 			}
 		});
 	}
-
-
+	
+	
 	/**
-	 * Write to stream
+	 * Resize a frame if it has not the standard frame size 640x480 (higher performance)
+	 * @param frame to resize
+	 * @return resized frame
 	 */
-	private void writeToStream() {
-
+	private MBFImage resizeFrame(MBFImage frame) {
+		if(frame.getWidth() == 640 && frame.getHeight() == 480) {
+			return frame;
+		}
+		FImage band0 = ResizeProcessor.resample(frame.getBand(0), 640, 480);
+		FImage band1 = ResizeProcessor.resample(frame.getBand(1), 640, 480);
+		FImage band2 = ResizeProcessor.resample(frame.getBand(2), 640, 480);
+		return new MBFImage(band0,band1,band2);
 	}
+
 
 	/**
 	 * Main Loop of the analyzer thread
@@ -279,16 +320,40 @@ public class VideoAnalyzer implements Runnable {
 	public void run() {
 		// Display for Testpurposes
 		displayCapture();
-
+		
+		int frameCount = 0;
 		// MAIN LOOP
 		while (true) {
+			if(frameCount>100) {
+				frameCount=0;
+			}
 			try {
 				if (capture.hasNextFrame()) {
-					// updatePosition(capture.getNextFrame());
 					MBFImage frame = capture.getNextFrame();
+					
+					//Resize the frame in case capture object was not able to set width and height to 640x480
+					//frame = resizeFrame(frame);
+					
+					//Update Blobs each frame
 					updateBlobs(frame);
-					updateAnalysingArea(getFaces(frame));
+					
+					// update analysing Region by faces every 5 frames
+					if(frameCount%5==0) {
+						updateAnalysingArea(getFaces(frame));
+					}
+					//motionRegion = getRegionOfMotion(frame);
+					
+					//Analyze Motion and trigger events
 					motionAnalyzer.analyzeMotion(bloblist);
+					
+					if(motionAnalyzer.isClapping()) {
+						player.playClapping();
+					} else if (motionAnalyzer.isCheering()) {
+						player.playCheering();
+					}
+					
+					//higher cycle count
+					count++;
 				}
 
 				Thread.sleep(1);
