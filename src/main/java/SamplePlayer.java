@@ -1,10 +1,13 @@
-import javax.xml.stream.Location;
+
 
 public class SamplePlayer {
     public int bpm;
-    private Location location;
-    public SamplePlayer(Location location)  {
+    private SimLocation location;
+    
+    public SamplePlayer(SimLocation location)  {
+    	
     }
+    
     public void playAmbience()  {
 
     }
