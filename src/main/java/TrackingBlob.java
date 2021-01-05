@@ -20,6 +20,9 @@ public class TrackingBlob {
 	 * @param y Y-Coordinate of Blob
 	 */
 	public TrackingBlob(int x, int y) {
+		if(x<0 || y<0) {
+			throw new IllegalArgumentException("illegal blob coordinate");
+		}
 		this.x = x;
 		this.y = y;
 		this.w = 1;
@@ -59,6 +62,9 @@ public class TrackingBlob {
 	 * @param y position of the pixel
 	 */
 	protected void addToBlob(int x, int y) {
+		if(x<0 || y<0) {
+			throw new IllegalArgumentException("Illegal blob point");
+		}
 
 		if (x < this.x) {
 			w += this.x - x;
@@ -85,6 +91,10 @@ public class TrackingBlob {
 	 * @return true, if the pixel is close to the blob
 	 */
 	protected boolean isNear(int x, int y, int dist) {
+		if(x<0 || y<0 || dist < 0) {
+			throw new IllegalArgumentException("Illegal value");
+		}
+		
 		if (x > this.x - dist && x < this.x + w + dist && y > this.y - dist && y < this.y + h + dist) {
 			return true;
 		}
