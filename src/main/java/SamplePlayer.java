@@ -1,7 +1,7 @@
 
 
 public class SamplePlayer {
-    public int bpm;
+    public static int bpm;
     private SimLocation location;
     
     public SamplePlayer(SimLocation location)  {

@@ -6,6 +6,7 @@ public class AmplitudeAnalyzer extends PApplet implements Runnable  {
     private Amplitude amplitude=new Amplitude(this);
     private AudioIn stream;
     private boolean SongInProgress=false;
+    
     public AmplitudeAnalyzer(AudioIn in, SamplePlayer player)  {
         stream=in;
     }
@@ -20,6 +21,10 @@ public class AmplitudeAnalyzer extends PApplet implements Runnable  {
             }
         } else if(amplitude.analyze()>0)
             SongInProgress=true;
+    }
+    
+    public boolean isSongInProgress() {
+    	return SongInProgress;
     }
 
     @Override
