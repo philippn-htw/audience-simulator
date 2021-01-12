@@ -1,41 +1,80 @@
+import ddf.minim.AudioPlayer;
+import ddf.minim.AudioSample;
+import ddf.minim.Minim;
+import processing.core.PApplet;
+
+public class SamplePlayer extends PApplet {
+    public int bpm; //evtl unnötig
+    private SimLocation location;   // evtl unnötig
+    private Minim minim=new Minim(this);
+    private AudioPlayer ambiencePlayer;
+    private AudioSample clappingPlayer;
+    private AudioSample cheeringPlayer;
+    private boolean shouldBeClapping; //die hier soll der VideoAnalyzer verändern.
+    private boolean hasCheered; // true, wenn die cheer-methode vor kurzem aufgerufen wurde
 
 
-public class SamplePlayer {
-    public static int bpm;
-    private SimLocation location;
-    
-    public SamplePlayer(SimLocation location)  {
-    	
+    public void setShouldBeClapping(boolean shouldBeClapping) {
+        this.shouldBeClapping = shouldBeClapping;
     }
-    
+
+    /**
+     * weist den Playern files zu und spielt Ambience (nicht wirklich MVC-Konform aber was solls)
+     * @param location
+     */
+    public SamplePlayer(SimLocation location)   {
+        this.location=location;
+        ambiencePlayer=minim.loadFile(location+"ambience.mp3");
+        clappingPlayer=minim.loadSample(location+"clap.mp3");
+        cheeringPlayer=minim.loadSample(location+"cheer.mp3");
+        this.playAmbience();
+    }
+
+    /**
+     * spielt die ganze Zeit ambience im Loop (auf voller Lautstärke).
+     */
     public void playAmbience()  {
-
+        ambiencePlayer.loop();
     }
 
+    /**
+     * spielt clapping, wenn shouldBeClapping true ist.
+     */
     public void playClapping()  {
-
+        if(shouldBeClapping)    {
+            clappingPlayer.trigger();
+        }
     }
 
-    public void stopClapping()  {
-
-    }
-
+    /**
+     * spielt cheering, wenn nicht vor weniger als 0.5 Sekunden Cheering gespielt wurde
+     */
     public void playCheering()  {
+        if(!hasCheered) {
+            cheeringPlayer.trigger();
+            hasCheered=true;
+            Thread t=new Thread(() -> {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                hasCheered=false;
+            });
+            t.start();
+        }
 
     }
-    public void stopCheering()  {
 
-    }
-
-    public void switchLocation()    {
-
-    }
-
-    private boolean isClapping()    {
-    return true;
-    }
-
-    private boolean isCheering()    {
-        return true;
+    /**
+     * macht im Endeffekt das gleiche wie der Konstruktor
+     * @param location
+     */
+    public void switchLocation(SimLocation location)    {
+        this.location=location;
+        ambiencePlayer=minim.loadFile(location+"ambience.mp3");
+        clappingPlayer=minim.loadSample(location+"clap.mp3");
+        cheeringPlayer=minim.loadSample(location+"cheer.mp3");
+        this.playAmbience();
     }
 }
