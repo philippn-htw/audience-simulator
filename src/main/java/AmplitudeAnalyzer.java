@@ -33,7 +33,7 @@ public class AmplitudeAnalyzer extends PApplet implements Runnable  {
         amplitude.input(stream);
         if(amplitude.analyze()>0)
             SongInProgress=true;
-        while(true) {
+        while(!Thread.interrupted()) {
             try {
                 checkSongInProgress();
             } catch (InterruptedException e) {
