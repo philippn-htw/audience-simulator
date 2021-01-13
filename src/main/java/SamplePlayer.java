@@ -24,9 +24,9 @@ public class SamplePlayer extends PApplet {
      */
     public SamplePlayer(SimLocation location)   {
         this.location=location;
-        ambiencePlayer=minim.loadFile(location+"ambience.mp3");
-        clappingPlayer=minim.loadSample(location+"clap.mp3");
-        cheeringPlayer=minim.loadSample(location+"cheer.mp3");
+        ambiencePlayer=minim.loadFile(location.getPath()+"ambience.mp3");
+        clappingPlayer=minim.loadSample(location.getPath()+"clap.mp3");
+        cheeringPlayer=minim.loadSample(location.getPath()+"cheer.mp3");
         this.playAmbience();
     }
 
@@ -66,15 +66,22 @@ public class SamplePlayer extends PApplet {
 
     }
 
+    public void closePlayers()  {
+        ambiencePlayer.close();
+        clappingPlayer.close();
+        cheeringPlayer.close();
+        minim.stop();
+    }
+
     /**
      * macht im Endeffekt das gleiche wie der Konstruktor
      * @param location
      */
     public void switchLocation(SimLocation location)    {
         this.location=location;
-        ambiencePlayer=minim.loadFile(location+"ambience.mp3");
-        clappingPlayer=minim.loadSample(location+"clap.mp3");
-        cheeringPlayer=minim.loadSample(location+"cheer.mp3");
+        ambiencePlayer=minim.loadFile(location.getPath()+"ambience.mp3");
+        clappingPlayer=minim.loadSample(location.getPath()+"clap.mp3");
+        cheeringPlayer=minim.loadSample(location.getPath()+"cheer.mp3");
         this.playAmbience();
     }
 }
