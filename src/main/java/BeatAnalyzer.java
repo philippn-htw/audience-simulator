@@ -18,80 +18,124 @@ import processing.sound.*;
  *
  */
 public class BeatAnalyzer extends PApplet implements Runnable {
-	// Declare the sound source and FFT analyzer variables
-	AudioIn in;
-	FFT fft;
-
-	AmplitudeAnalyzer amplitude;
-
-	// Define how many FFT bands to use (this needs to be a power of two)
-	int bands = 128;
-
-	float[] last_spectrum = new float[bands];
-
-	// Define a smoothing factor which determines how much the spectrums of
-	// consecutive
-	// points in time should be combined to create a smoother visualisation of the
-	// spectrum.
-	// A smoothing factor of 1.0 means no smoothing (only the data from the newest
-	// analysis
-	// is rendered), decrease the factor down towards 0.0 to have the visualisation
-	// update
-	// more slowly, which is easier on the eye.
-	float smoothingFactor = 0.4f;
-
-	// Create a vector to store the smoothed spectrum data in
-	float[] sum = new float[bands];
-
-	// Variables for drawing the spectrum:
-	// Declare a scaling factor for adjusting the height of the rectangles
-	int scale = 5;
-	// Declare a drawing variable for calculating the width of the
-	float barWidth;
-
-	// Sound Energy Value of previous frame
-	double prev;
-	// padding intervall between beat signals
-	int padding;
-
-	int frameCount;
-
-	int bpm;
+	/**
+	 * Declare the sound source and FFT analyzer
+	 */
+	private AudioIn in;
+	private FFT fft;
 	
+	/**
+	 * Amplitude Analyzer to check if song is in progress
+	 */
+	private AmplitudeAnalyzer amplitude;
+	
+	private SamplePlayer player;
+
+	/**
+	 *  Define how many FFT bands to use (this needs to be a power of two)
+	 */
+	private int bands = 128;
+	
+	/**
+	 * values of frequency bands of the last frame
+	 */
+	private float[] last_spectrum = new float[bands];
+
+	/**
+	 * factor to smooth out frequency bands over time (linked bands). 1.0 is no smoothing
+	 */
+	private float smoothingFactor = 0.4f;
+
+	/**
+	 *  Create a vector to store the smoothed spectrum data in
+	 */
+	private float[] sum = new float[bands];
+
+	/**
+	 *  Sound Energy Value of previous frame
+	 */
+	private double prev;
+	
+	/**
+	 * minimum padding interval between beat signals
+	 */
+	private int padding;
+	
+	/**
+	 * framecount to define cycles and keep track of the frame number
+	 */
+	private int frameCount;
+	
+	/**
+	 * variable to store the bpm value
+	 */
+	private int bpm;
+	
+	/**
+	 * number of frames that make up a cycle. 100 means 1 second.
+	 */
 	private static final int sampleCount=1000;
+	
+	/**
+	 * lists to store values in time (per cycle)
+	 * bpms stores all bpm values of each cycle.
+	 * fluxValues stores the calculated fluxes over an fft spectrum for each frame.
+	 * fluxValuesNormalized stores the calculated fluxes over an fft spectrum for each frame normalized.
+	 * onsetValues stores detected onsets(beats) per frame.
+	 */
+	private List<Integer> bpms;
+	private List<Integer> beatsInPeriod;
+	private double[] fluxValues = new double[sampleCount];
+	private List<Boolean> onsetValues;
+	private double[] fluxValuesNormalized = new double[sampleCount];
+	
+	/**
+	 * index of the specified input device
+	 */
+	private int deviceIndex = 0;
 
-	List<Integer> bpms;
-	List<Integer> beatsInPeriod;
-	double[] fluxValues = new double[sampleCount];
-	List<Boolean> onsetValues;
-	double[] fluxValuesNormalized = new double[sampleCount];
-
-	int deviceIndex = 0;
-
-	SoundFile sample;
+	private SoundFile sample;
+	
+	/**
+	 * set if beat is synchroized (clapping should be on beat. Synchroization should be triggered every cycle.
+	 */
+	private boolean beatSynchronized=false;
+	
+	private int synchronizeOffset=0;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param amplitude Amplitude Analyzer to check if a new song started or not
+	 * @param deviceIndex Index of the input device
 	 */
-	public BeatAnalyzer(int deviceIndex, AmplitudeAnalyzer amplitude) {
+	public BeatAnalyzer(AudioIn in, AmplitudeAnalyzer amplitude, SamplePlayer player) {
 		bpms = new ArrayList<>();
 		beatsInPeriod = new ArrayList<>();
 		onsetValues = new ArrayList<>();
 		frameCount = 0;
 		this.amplitude = amplitude;
-		this.deviceIndex = deviceIndex;
+		this.in = in;
+		this.player = player;
 	}
-
-	public BeatAnalyzer(int deviceIndex) {
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param amplitude Amplitude Analyzer to check if a new song started or not
+	 */
+	public BeatAnalyzer(int deviceIndex, SamplePlayer player) {
 		bpms = new ArrayList<>();
 		beatsInPeriod = new ArrayList<>();
 		onsetValues = new ArrayList<>();
 		frameCount = 0;
 		this.deviceIndex = deviceIndex;
+		this.player = player;
 	}
-
+	
+	/**
+	 * Constructor without parameters
+	 */
 	public BeatAnalyzer() {
 		bpms = new ArrayList<>();
 		beatsInPeriod = new ArrayList<>();
@@ -107,19 +151,16 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	}
 
 	/**
-	 * Processing Native. Pre conditions.
+	 * Processing Native. Setup pre conditions, initialize variables.
 	 */
 	public void setup() {
-		// surface.setVisible(false);
+		surface.setVisible(false);
 		sample = new SoundFile(this,
 				"D:\\Studium\\Programme\\FS3\\Multimedia\\PublikumsSimulator\\AudienceSimGithub\\audience-simulator\\src\\main\\resources\\sounds\\stadium\\clapping_1.mp3");
 		background(255);
 
-		// Calculate the width of the rects depending on how many bands we have
-		barWidth = width / (float) (bands);
-
 		// Load and play a soundfile and loop it.
-		in = new AudioIn(this, deviceIndex);
+		//in = new AudioIn(this, deviceIndex);
 		// in.play();
 
 		// Create the FFT analyzer and connect the playing soundfile to it.
@@ -127,11 +168,46 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 		fft.input(in);
 		prev = 0;
 		padding = 0;
+		
+		//set framerate
 		frameRate(100);
-	}	
-
+	}
+	
 	/**
-	 * Detect a beat in current frame
+	 * processing native. Main draw loop (executed 100 times per second)
+	 */
+	public void draw() {
+		updateSpectralFluxes(fft.analyze());
+
+		if (frameCount >= sampleCount - 1) {
+			frameCount = 0;
+			beatSynchronized = false;
+			updateOnset();
+			calculateBPM();
+		}
+		
+		detectBeat();
+		
+		// on beat trigger clap
+		if(bpm>0) {
+			if(beatSynchronized) {
+				int frameBeatIntervall = (int)(100/((float)bpm/60f));
+				if((frameCount-(synchronizeOffset-frameBeatIntervall))%frameBeatIntervall==0 && 
+						(frameCount-(synchronizeOffset-frameBeatIntervall))/frameBeatIntervall>1) {
+					sample.stop();
+					sample.play();
+					triggerClap();
+				}
+			}
+		}
+
+		frameCount++;
+	}
+
+	
+	/**
+	 * Detect a beat in current frame.(In real time. Used to synchronize clapping on beat.
+	 * No BPM detection/calculation with this method.)
 	 * @param sEnergy
 	 */
 	private void detectBeat() {
@@ -142,7 +218,7 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 
 		for (int i = 0; i < bands; i++) {
 			// Smooth the FFT spectrum data by smoothing factor
-			sum[i] += (fft.spectrum[i] - sum[i]) * smoothingFactor;
+			sum[i] += (fft.spectrum[i] - sum[i]) * (smoothingFactor/3.0);
 
 			if (i > 1) {
 				sEnergy += abs(sum[i] * (log((float) i / (float) bands) / -5));
@@ -152,43 +228,26 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 		}
 		
 		if (prev > 0) {
-			if (sEnergy / prev > 1.08) {
-				if (padding > 45) {
-					beatsInPeriod.add(frameCount);
-					padding = 0;
-					triggerClap();
-				}
+			if (sEnergy / prev > 1.1) {
+				synchronizeClapping();			
 			}
 		}
+		
+		prev = sEnergy;
 	}
 	
-	
-	/**
-	 * processing native
-	 */
-	public void draw() {
-		updateSpectralFluxes(fft.analyze());
-
-		if (frameCount >= sampleCount - 1) {
-			frameCount = 0;
-			updateOnset();
-			calculateBPM();
-		}
-		if(bpm>0) {
-			if((frameCount-60)%(int)(100/((float)bpm/60f))==0) {
-				//System.out.println("BEAT");			
-				sample.play();
-			}
-		}
-
-		frameCount++;
-	}
 
 	/**
 	 * Spectrual Fluxes are the sum of only increases in every frequency band. Loop
 	 * is divided by two for better performance. Have to be called every frame
+	 * 
+	 * @param spec float array of analyzed fft frequency band values.
 	 */
 	private void updateSpectralFluxes(float[] spec) {
+		if(spec.length != bands) {
+			throw new IllegalArgumentException("Difference between bands and spectrum size.");
+		}
+		
 		//smooth bands
 		for (int i = 0; i < bands; i++) {
 			spec[i] += (spec[i] - sum[i]) * smoothingFactor;
@@ -271,7 +330,6 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 
 			// Continue if the sample does not meet the past threshold
 			if (fluxValuesNormalized[i] < pastThreshold) {
-				//System.out.println("NOT OVER PAST THRESHOLD");
 				onsetValues.add(false);
 				continue;
 			}
@@ -290,7 +348,6 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 			// Continue of the sample does no meet the local neighbour criterium
 			if (!localMaximum) {
 				onsetValues.add(false);
-				//System.out.println("NOT LOCAL MAXIMUM");
 				continue;
 			}
 
@@ -307,7 +364,6 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 			// Continue if the sample does not meet the average threshold
 			if (fluxValuesNormalized[i] < averageThreshold) {
 				onsetValues.add(false);
-				//System.out.println("NOT OVER AVERAGE THRESHOLD");
 				continue;
 			}
 
@@ -325,14 +381,11 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	private void calculateBPM() {
 		int intervall = 0;
 		List<Integer> intervallList = new ArrayList<>();
-		int n=0;
 		for(int i=0;i<onsetValues.size();i++) {
 			intervall++;
 			if(onsetValues.get(i)==true) {
 				intervallList.add(intervall);
-				//System.out.println(intervall);
 				intervall=0;
-				n++;
 			}
 		}
 		
@@ -366,6 +419,7 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 			}
 		}
 		
+		//Calculate bpm
 		if(mainIntervallElements>0) {
 			int mainIntervallAverage = mainIntervallSum / mainIntervallElements;
 		
@@ -406,14 +460,32 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 			prev = 0;
 		}
 	}
+	
+	
+	/**
+	 * synchronize clapping on a beat each cycle.
+	 */
+	private void synchronizeClapping() {
+		if (!beatSynchronized) {
+			synchronizeOffset = frameCount;
+			beatSynchronized = true;
+		}
+	}
 
+	
 	/**
 	 * trigger single Clap in SamplePlayer
 	 */
 	private void triggerClap() {
-
+		if(player != null) {
+			player.playClapping();
+		}
 	}
-
+	
+	
+	/**
+	 * start thread and run sketch.
+	 */
 	@Override
 	public void run() {
 		System.setProperty("java.version", "13.0.0");
