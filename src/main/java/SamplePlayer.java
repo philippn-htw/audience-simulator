@@ -6,7 +6,7 @@ import processing.core.PApplet;
 public class SamplePlayer extends PApplet {
     public int bpm; //evtl unnötig
     private SimLocation location;   // evtl unnötig
-    private Minim minim=new Minim(this);
+    private Minim minim=new Minim(new MinimFileSystemHandler());
     private AudioPlayer ambiencePlayer;
     private AudioSample clappingPlayer;
     private AudioSample cheeringPlayer;
@@ -25,8 +25,8 @@ public class SamplePlayer extends PApplet {
     public SamplePlayer(SimLocation location)   {
         this.location=location;
         ambiencePlayer=minim.loadFile(location.getPath()+"ambience.mp3");
-        clappingPlayer=minim.loadSample(location.getPath()+"clap.mp3");
-        cheeringPlayer=minim.loadSample(location.getPath()+"cheer.mp3");
+        clappingPlayer=minim.loadSample(location.getPath()+"clapping_1.mp3");
+        cheeringPlayer=minim.loadSample(location.getPath()+"cheering_1.mp3");
         this.playAmbience();
     }
 

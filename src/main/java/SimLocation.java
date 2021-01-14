@@ -5,10 +5,10 @@
  *
  */
 public enum SimLocation {
-	STADIUM("\\stadium\\"),
-	THEATER("\\theater\\"),
-	CLUB("/path/to/sound/files"),
-	BAR("\\bar\\");
+	STADIUM("src/main/resources/sounds/stadium/"),
+	THEATER("src/main/resources/sounds/theater/"),
+	//CLUB("/path/to/sound/files"),
+	BAR("src/main/resources/sounds/bar/");
 	
 	private String loc;
 	
