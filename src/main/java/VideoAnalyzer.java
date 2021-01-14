@@ -4,8 +4,8 @@ import org.openimaj.video.capture.Device;
 import org.openimaj.video.capture.VideoCapture;
 import org.openimaj.video.capture.VideoCaptureException;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
+//import java.awt.Graphics2D;
+//import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +18,7 @@ import org.openimaj.image.processing.face.detection.HaarCascadeDetector;
 import org.openimaj.image.processing.resize.ResizeFilterFunction;
 import org.openimaj.image.processing.resize.ResizeProcessor;
 import org.openimaj.image.processing.resize.filters.BoxFilter;
-import org.openimaj.image.processing.resize.filters.Lanczos3Filter;
+//import org.openimaj.image.processing.resize.filters.Lanczos3Filter;
 import org.openimaj.math.geometry.point.Point2d;
 import org.openimaj.math.geometry.shape.Ellipse;
 import org.openimaj.math.geometry.shape.Rectangle;
@@ -35,9 +35,9 @@ public class VideoAnalyzer implements Runnable {
 	private SamplePlayer player;
 	private final int TARGETWIDTH = 640;
 	private final int TARGETHEIGHT = 480;
-	private int posX;
-	private int posY;
-	private int count;
+//	private int posX;
+//	private int posY;
+//	private int count;
 	
 	/**
 	 * List of all blobs (connected regions of the same color) in frame.
@@ -66,9 +66,9 @@ public class VideoAnalyzer implements Runnable {
 	 * @throws IllegalArgumentException if the capture device or the sample player is not given.
 	 */
 	public VideoAnalyzer(Device captureDevice, SamplePlayer player) {
-		if(captureDevice == null || player == null) {
-			throw new IllegalArgumentException("Capture device and player have to be defined.");
-		}
+//		if(captureDevice == null || player == null) {
+//			throw new IllegalArgumentException("Capture device and player have to be defined.");
+//		}
 		this.captureDevice = captureDevice;
 		this.player = player;
 
@@ -121,30 +121,30 @@ public class VideoAnalyzer implements Runnable {
 	}
 
 	
-	/**
-	 * Updates the captured position (DEPRECATED)
-	 */
-	private void updatePosition(MBFImage frame) {
-		count = 0;
-		posX = 0;
-		posY = 0;
-		
-		for (int y = 0; y < frame.getHeight(); y++) {
-			for (int x = 0; x < frame.getWidth(); x++) {
-				float currentRed = frame.getBand(0).pixels[y][x];
-				float currentGreen = frame.getBand(1).pixels[y][x];
-				float currentBlue = frame.getBand(2).pixels[y][x];
-
-				double dist = colorDist(currentRed, currentGreen, currentBlue);
-
-				if (dist < 0.5) {
-					posX += x;
-					posY += y;
-					count++;
-				}
-			}
-		}
-	}
+//	/**
+//	 * Updates the captured position (DEPRECATED)
+//	 */
+//	private void updatePosition(MBFImage frame) {
+//		count = 0;
+//		posX = 0;
+//		posY = 0;
+//		
+//		for (int y = 0; y < frame.getHeight(); y++) {
+//			for (int x = 0; x < frame.getWidth(); x++) {
+//				float currentRed = frame.getBand(0).pixels[y][x];
+//				float currentGreen = frame.getBand(1).pixels[y][x];
+//				float currentBlue = frame.getBand(2).pixels[y][x];
+//
+//				double dist = colorDist(currentRed, currentGreen, currentBlue);
+//
+//				if (dist < 0.5) {
+//					posX += x;
+//					posY += y;
+//					count++;
+//				}
+//			}
+//		}
+//	}
 	
 	
 	/**
@@ -384,6 +384,11 @@ public class VideoAnalyzer implements Runnable {
 		//MBFImage frame;
 		// MAIN LOOP
 		while (true) {
+			
+			if(Thread.interrupted()) {
+				break;
+			}
+			
 			if(frameCount>100) {
 				frameCount=0;
 			}
@@ -398,7 +403,7 @@ public class VideoAnalyzer implements Runnable {
 					updateBlobs(frameResized);
 					
 					// update analyzing Region by faces every 5 frames
-					if(frameCount%5==0) {
+					if(frameCount%3==0) {
 						updateAnalysingArea(getFaces(frameResized));
 					}
 					//motionRegion = getRegionOfMotion(frame);
@@ -406,14 +411,16 @@ public class VideoAnalyzer implements Runnable {
 					//Analyze Motion and trigger events
 					motionAnalyzer.analyzeMotion(bloblist);
 					
-					if(motionAnalyzer.isClapping()) {
-						player.playClapping();
-					} else if (motionAnalyzer.isCheering()) {
-						player.playCheering();
+					if(player!=null) {
+						if(motionAnalyzer.isClapping()) {
+							player.setShouldBeClapping(true);
+						} else if (motionAnalyzer.isCheering()) {
+							player.playCheering();
+						}
 					}
 					
 					//higher cycle count
-					count++;
+					frameCount++;
 				}
 
 				Thread.sleep(1);

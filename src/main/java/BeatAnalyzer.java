@@ -56,10 +56,6 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	 */
 	private double prev;
 	
-	/**
-	 * minimum padding interval between beat signals
-	 */
-	private int padding;
 	
 	/**
 	 * framecount to define cycles and keep track of the frame number
@@ -84,7 +80,6 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	 * onsetValues stores detected onsets(beats) per frame.
 	 */
 	private List<Integer> bpms;
-	private List<Integer> beatsInPeriod;
 	private double[] fluxValues = new double[sampleCount];
 	private List<Boolean> onsetValues;
 	private double[] fluxValuesNormalized = new double[sampleCount];
@@ -101,7 +96,15 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	 */
 	private boolean beatSynchronized=false;
 	
+	/**
+	 * offset to synchronize the clapping on beat
+	 */
 	private int synchronizeOffset=0;
+	
+	/**
+	 * if true, thread is stopped.
+	 */
+	public static boolean stop=false;
 
 	/**
 	 * Constructor
@@ -111,7 +114,6 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	 */
 	public BeatAnalyzer(AudioIn in, AmplitudeAnalyzer amplitude, SamplePlayer player) {
 		bpms = new ArrayList<>();
-		beatsInPeriod = new ArrayList<>();
 		onsetValues = new ArrayList<>();
 		frameCount = 0;
 		this.amplitude = amplitude;
@@ -126,11 +128,11 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	 */
 	public BeatAnalyzer(int deviceIndex, SamplePlayer player) {
 		bpms = new ArrayList<>();
-		beatsInPeriod = new ArrayList<>();
 		onsetValues = new ArrayList<>();
 		frameCount = 0;
 		this.deviceIndex = deviceIndex;
 		this.player = player;
+		
 	}
 	
 	/**
@@ -138,16 +140,8 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	 */
 	public BeatAnalyzer() {
 		bpms = new ArrayList<>();
-		beatsInPeriod = new ArrayList<>();
 		onsetValues = new ArrayList<>();
 		frameCount = 0;
-	}
-
-	/**
-	 * Processing Native. Set Window Size
-	 */
-	public void settings() {
-		size(640, 360);
 	}
 
 	/**
@@ -157,19 +151,17 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 		surface.setVisible(false);
 		sample = new SoundFile(this,
 				"D:\\Studium\\Programme\\FS3\\Multimedia\\PublikumsSimulator\\AudienceSimGithub\\audience-simulator\\src\\main\\resources\\sounds\\stadium\\clapping_1.mp3");
-		background(255);
+		//background(255);
 
 		// Load and play a soundfile and loop it.
-		//in = new AudioIn(this, deviceIndex);
-		// in.play();
+		in = new AudioIn(this, deviceIndex);
+		//in.play();
 
 		// Create the FFT analyzer and connect the playing soundfile to it.
 		fft = new FFT(this, bands);
 		fft.input(in);
 		prev = 0;
-		padding = 0;
 		
-		//set framerate
 		frameRate(100);
 	}
 	
@@ -177,6 +169,10 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	 * processing native. Main draw loop (executed 100 times per second)
 	 */
 	public void draw() {
+		if(stop) {
+			exit();
+		}
+		
 		updateSpectralFluxes(fft.analyze());
 
 		if (frameCount >= sampleCount - 1) {
@@ -184,6 +180,7 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 			beatSynchronized = false;
 			updateOnset();
 			calculateBPM();
+			checkSongInProgress();
 		}
 		
 		detectBeat();
@@ -454,10 +451,19 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	 * Checks if a song is in progress. Otherwise resets everything.
 	 */
 	private void checkSongInProgress() {
-		if (!amplitude.isSongInProgress()) {
-			bpms.clear();
-			beatsInPeriod.clear();
-			prev = 0;
+		if(amplitude!=null) {
+			if (!amplitude.isSongInProgress()) {
+				bpms.clear();
+				onsetValues.clear();
+				for(int i=0;i<fluxValues.length;i++) {
+					fluxValues[i]=0;
+				}
+				for(int i=0;i<fluxValuesNormalized.length;i++) {
+					fluxValuesNormalized[i]=0;
+				}
+				prev = 0;
+				beatSynchronized = false;
+			}
 		}
 	}
 	
@@ -481,6 +487,7 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 			player.playClapping();
 		}
 	}
+
 	
 	
 	/**
@@ -490,6 +497,13 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	public void run() {
 		System.setProperty("java.version", "13.0.0");
 		PApplet.main("BeatAnalyzer");
+		
+		while(true) {
+			if(Thread.interrupted()) {
+				BeatAnalyzer.stop = true;
+				break;
+			}
+		}
 	}
 
 }
