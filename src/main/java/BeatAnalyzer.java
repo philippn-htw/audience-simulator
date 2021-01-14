@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +71,8 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	 */
 	private static final int sampleCount=1000;
 	
+	private static final int FPS = 100;
+	
 	/**
 	 * lists to store values in time (per cycle)
 	 * bpms stores all bpm values of each cycle.
@@ -85,13 +86,6 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	private double[] fluxValuesNormalized = new double[sampleCount];
 	
 	/**
-	 * index of the specified input device
-	 */
-	private int deviceIndex = 0;
-
-	private SoundFile sample;
-	
-	/**
 	 * set if beat is synchroized (clapping should be on beat. Synchroization should be triggered every cycle.
 	 */
 	private boolean beatSynchronized=false;
@@ -100,11 +94,6 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	 * offset to synchronize the clapping on beat
 	 */
 	private int synchronizeOffset=0;
-	
-	/**
-	 * if true, thread is stopped.
-	 */
-	public static boolean stop=false;
 
 	/**
 	 * Constructor
@@ -126,11 +115,11 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	 * 
 	 * @param amplitude Amplitude Analyzer to check if a new song started or not
 	 */
-	public BeatAnalyzer(int deviceIndex, SamplePlayer player) {
+	public BeatAnalyzer(AudioIn in, SamplePlayer player) {
 		bpms = new ArrayList<>();
 		onsetValues = new ArrayList<>();
 		frameCount = 0;
-		this.deviceIndex = deviceIndex;
+		this.in = in;
 		this.player = player;
 		
 	}
@@ -147,31 +136,19 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	/**
 	 * Processing Native. Setup pre conditions, initialize variables.
 	 */
-	public void setup() {
-		surface.setVisible(false);
-		sample = new SoundFile(this,
-				"D:\\Studium\\Programme\\FS3\\Multimedia\\PublikumsSimulator\\AudienceSimGithub\\audience-simulator\\src\\main\\resources\\sounds\\stadium\\clapping_1.mp3");
-		//background(255);
-
-		// Load and play a soundfile and loop it.
-		in = new AudioIn(this, deviceIndex);
-		//in.play();
+	public void setupAll() {
 
 		// Create the FFT analyzer and connect the playing soundfile to it.
 		fft = new FFT(this, bands);
 		fft.input(in);
 		prev = 0;
 		
-		frameRate(100);
 	}
 	
 	/**
 	 * processing native. Main draw loop (executed 100 times per second)
 	 */
-	public void draw() {
-		if(stop) {
-			exit();
-		}
+	public void execute() {
 		
 		updateSpectralFluxes(fft.analyze());
 
@@ -191,8 +168,6 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 				int frameBeatIntervall = (int)(100/((float)bpm/60f));
 				if((frameCount-(synchronizeOffset-frameBeatIntervall))%frameBeatIntervall==0 && 
 						(frameCount-(synchronizeOffset-frameBeatIntervall))/frameBeatIntervall>1) {
-					sample.stop();
-					sample.play();
 					triggerClap();
 				}
 			}
@@ -376,6 +351,7 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	 * calculate the bpm by searching for most likely intervall between beats.
 	 */
 	private void calculateBPM() {
+		
 		int intervall = 0;
 		List<Integer> intervallList = new ArrayList<>();
 		for(int i=0;i<onsetValues.size();i++) {
@@ -424,7 +400,7 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 			
 			if(intervallList.size() > 0) {
 			
-				bpm = (sampleCount / mainIntervallAverage) * (60/(sampleCount/100));
+				bpm = (sampleCount / mainIntervallAverage) * (60/(sampleCount/FPS));
 				
 				if(bpm>120) {
 					bpm=bpm/2;
@@ -495,14 +471,21 @@ public class BeatAnalyzer extends PApplet implements Runnable {
 	 */
 	@Override
 	public void run() {
-		System.setProperty("java.version", "13.0.0");
-		PApplet.main("BeatAnalyzer");
+		//System.setProperty("java.version", "13.0.0");
+		//PApplet.main("BeatAnalyzer");
+		setupAll();
 		
+		long currentTime = System.currentTimeMillis();
 		while(true) {
 			if(Thread.interrupted()) {
-				BeatAnalyzer.stop = true;
 				break;
 			}
+			
+			if(System.currentTimeMillis()>= currentTime+(1000/FPS)) {
+			currentTime = System.currentTimeMillis();
+			execute();			
+			}
+			
 		}
 	}
 
