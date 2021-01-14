@@ -16,7 +16,7 @@ public class AmplitudeAnalyzer extends PApplet implements Runnable  {
     private void checkSongInProgress() throws InterruptedException {
         if(SongInProgress)  {
             if(amplitude.analyze()<=0.2)  {
-                wait(1000);
+                Thread.sleep(1000);
                 if(amplitude.analyze()<=0.2)  {
                     SongInProgress=false;
                     sPlayer.playCheering();
