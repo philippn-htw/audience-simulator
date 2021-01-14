@@ -20,7 +20,7 @@ public class VideoAnalyzerMainTest {
 		for (Device cam : cams) {
 			System.out.println(cam);
 		}
-		VideoAnalyzer vanalyzer = new VideoAnalyzer(cams.get(1), new SamplePlayer(SimLocation.STADIUM));
+		VideoAnalyzer vanalyzer = new VideoAnalyzer(cams.get(1), null);
 		try {
 			vanalyzer.startCapture();
 			Thread vaThread = new Thread(vanalyzer);
