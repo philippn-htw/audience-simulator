@@ -1,24 +1,15 @@
-import java.util.List;
-
 import org.openimaj.video.capture.Device;
-import org.openimaj.video.capture.VideoCapture;
 import org.openimaj.video.capture.VideoCaptureException;
 
-import processing.core.PApplet;
 import processing.sound.AudioIn;
 
 public class GeneralApplicationTest {
 	
 	public static void main(String[] args){
-		List<Device> cams = VideoCapture.getVideoDevices();
-		for (Device cam : cams) {
-			System.out.println(cam);
-		}
+		MediaInterface audio = new AudioDevice();
+		MediaInterface video = new VideoDevice();
 		
-		MainApplet applet = new MainApplet();
-		AudioIn in = new AudioIn(applet, 0);
-		
-		Simulation sim = new Simulation(in,cams.get(1),SimLocation.STADIUM);
+		Simulation sim = new Simulation((AudioIn)audio.getStream(0),(Device)video.getStream(1),SimLocation.THEATER);
 		try {
 			sim.start();
 		} catch (VideoCaptureException e) {
