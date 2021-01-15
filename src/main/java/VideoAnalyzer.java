@@ -406,13 +406,15 @@ public class VideoAnalyzer implements Runnable {
 					if(frameCount%3==0) {
 						updateAnalysingArea(getFaces(frameResized));
 					}
-					//motionRegion = getRegionOfMotion(frame);
+					
+					//safe isClapping value before analyze motion to check if clapping was currently activated or if it was already activated.
+					boolean previousClapping = motionAnalyzer.isClapping();
 					
 					//Analyze Motion and trigger events
 					motionAnalyzer.analyzeMotion(bloblist);
 					
 					if(player!=null) {
-						if(motionAnalyzer.isClapping()) {
+						if(motionAnalyzer.isClapping() && previousClapping==false) {
 							player.setShouldBeClapping(true);
 						} else if (motionAnalyzer.isCheering()) {
 							player.playCheering();
