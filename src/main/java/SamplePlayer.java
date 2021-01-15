@@ -14,8 +14,17 @@ public class SamplePlayer extends PApplet {
     private boolean hasCheered; // true, wenn die cheer-methode vor kurzem aufgerufen wurde
 
 
-    public void setShouldBeClapping(boolean shouldBeClapping) {
-        this.shouldBeClapping = shouldBeClapping;
+    public void setShouldBeClapping(boolean sbc) {
+        shouldBeClapping = sbc;
+        Thread t=new Thread(() -> {
+            try {
+                Thread.sleep((long)(Math.random()*10000+10000));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            shouldBeClapping=false;
+        });
+        t.start();
     }
 
     /**
