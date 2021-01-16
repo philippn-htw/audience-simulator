@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ScreenController">
+   <children>
+      <ChoiceBox layoutX="265.0" layoutY="102.0" prefHeight="27.0" prefWidth="149.0" />
+      <Label layoutX="255.0" layoutY="41.0" text="SETTINGS">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="103.0" layoutY="104.0" text="Input Device">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <Line endX="245.0" layoutX="192.0" layoutY="97.0" startX="-100.0" />
+      <CheckBox alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="100.0" layoutY="303.0" mnemonicParsing="false" text="Enable Video" textAlignment="RIGHT" />
+      <Label layoutX="103.0" layoutY="269.0" prefHeight="22.0" prefWidth="110.0" text="Input Device">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <ChoiceBox layoutX="265.0" layoutY="278.0" prefHeight="27.0" prefWidth="149.0" />
+      <Label layoutX="103.0" layoutY="151.0" prefHeight="22.0" prefWidth="110.0" text="Sample Rate">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <ChoiceBox layoutX="265.0" layoutY="149.0" prefHeight="27.0" prefWidth="149.0" />
+      <TextField layoutX="92.0" layoutY="67.0" prefHeight="27.0" prefWidth="95.0" text="AUDIO">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </TextField>
+      <TextField layoutX="92.0" layoutY="187.0" prefHeight="27.0" prefWidth="95.0" text="VIDEO">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </TextField>
+      <Line endX="245.0" layoutX="192.0" layoutY="214.0" startX="-100.0" />
+      <ChoiceBox layoutX="265.0" layoutY="242.0" prefHeight="27.0" prefWidth="149.0" />
+      <Label layoutX="103.0" layoutY="231.0" prefHeight="22.0" prefWidth="110.0" text="Resolution">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <Line endX="245.0" layoutX="192.0" layoutY="329.0" startX="-100.0" />
+      <Label layoutX="103.0" layoutY="337.0" prefHeight="22.0" prefWidth="110.0" text="Quality">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <ChoiceBox layoutX="265.0" layoutY="335.0" prefHeight="27.0" prefWidth="149.0" />
+      <Button layoutX="76.0" layoutY="28.0" mnemonicParsing="false" onAction="#switchToScene2" text="zurück" />
+   </children>
+</AnchorPane>
