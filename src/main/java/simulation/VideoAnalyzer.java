@@ -1,3 +1,4 @@
+package simulation;
 import org.openimaj.video.VideoDisplay;
 import org.openimaj.video.VideoDisplayListener;
 import org.openimaj.video.capture.Device;

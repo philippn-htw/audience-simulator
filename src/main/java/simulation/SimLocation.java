@@ -1,3 +1,4 @@
+package simulation;
 
 /**
  * Enum to define the possible event locations for the simulation
@@ -7,7 +8,7 @@
 public enum SimLocation {
 	STADIUM("src/main/resources/sounds/stadium/"),
 	THEATER("src/main/resources/sounds/theater/"),
-	//CLUB("/path/to/sound/files"),
+	CLUB("/path/to/sound/files"),
 	BAR("src/main/resources/sounds/bar/");
 	
 	private String loc;

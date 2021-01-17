@@ -2,6 +2,11 @@ import org.openimaj.video.capture.Device;
 import org.openimaj.video.capture.VideoCaptureException;
 
 import processing.sound.AudioIn;
+import simulation.AudioDevice;
+import simulation.MediaInterface;
+import simulation.SimLocation;
+import simulation.Simulation;
+import simulation.VideoDevice;
 
 public class GeneralApplicationTest {
 	

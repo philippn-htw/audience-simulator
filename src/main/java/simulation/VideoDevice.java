@@ -1,3 +1,4 @@
+package simulation;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class VideoDevice implements MediaInterface{
 		List<String> devices = new ArrayList<>();
 		List<Device> cams = VideoCapture.getVideoDevices();
 		for (Device cam : cams) {
-			devices.add(cam.toString());
+			devices.add(cam.getNameStr());
 		}
 		return devices;
 	}

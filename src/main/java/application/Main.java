@@ -30,6 +30,7 @@ public class Main extends Application {
 			
 			Parent root = FXMLLoader.load(getClass().getResource("/fxml/screen1.fxml"));
 			Scene scene = new Scene(root);
+			scene.getStylesheets().add(getClass().getResource("/css/application.css").toExternalForm());
 			stage.setScene(scene);
 			stage.show();
 			
@@ -101,7 +102,12 @@ public class Main extends Application {
 		}
 	}
 	
-	//public class Main2 extends Application {
+	@Override
+	public void stop() {
+		if(Settings.getSim()!= null) {
+			Settings.getSim().stop();
+		}
+	}
 		
 
 	

@@ -1,3 +1,4 @@
+package simulation;
 import processing.core.*; 
 import processing.data.*; 
 import processing.event.*; 
@@ -24,7 +25,7 @@ public class MainApplet extends PApplet {
 	/**
 	 * Set the window size of the processing application
 	 */
-	public void settings() {  size(640, 360); }
+	public void settings() {}
 	
 	
 	/**

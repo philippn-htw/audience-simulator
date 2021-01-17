@@ -1,3 +1,4 @@
+package simulation;
 import ddf.minim.AudioPlayer;
 import ddf.minim.AudioSample;
 import ddf.minim.Minim;

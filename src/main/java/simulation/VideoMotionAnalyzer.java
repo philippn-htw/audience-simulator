@@ -1,3 +1,4 @@
+package simulation;
 import java.util.ArrayList;
 
 import org.openimaj.math.geometry.shape.Rectangle;

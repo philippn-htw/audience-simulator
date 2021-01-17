@@ -3,6 +3,8 @@ import org.openimaj.video.capture.Device;
 import org.openimaj.video.capture.VideoCapture;
 import org.openimaj.video.capture.VideoCaptureException;
 
+import simulation.VideoAnalyzer;
+
 import java.util.List;
 
 
