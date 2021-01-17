@@ -1,8 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1">
-	<!-- TODO Add Nodes -->
-</AnchorPane>
 
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ScreenController">
+   <children>
+      <AnchorPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <Label layoutX="237.0" layoutY="36.0" text="Configure Simulation" />
+            <Button layoutX="41.0" layoutY="23.0" mnemonicParsing="false" onAction="#switchToScene2" text="zurück" />
+            <ImageView fitHeight="117.0" fitWidth="211.0" layoutX="191.0" layoutY="124.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/club.jpeg" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="94.0" fitWidth="134.0" layoutX="38.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/stadium.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="94.0" fitWidth="134.0" layoutX="427.0" layoutY="145.0" onDragDetected="#switchToScenesimulator3" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/bar.jpeg" />
+               </image>
+            </ImageView>
+            <Button layoutX="212.0" layoutY="276.0" mnemonicParsing="false" onAction="#startStopSimulation" fx:id="startStopSimButton" text="Start Simulation" />
+            <Button layoutX="68.0" layoutY="236.0" mnemonicParsing="false" onAction="#switchToScenesimulator" text="Stadion" />
+            <Button layoutX="268.0" layoutY="241.0" mnemonicParsing="false" onAction="#switchToScenesimulator2" text="Club" />
+            <Button layoutX="468.0" layoutY="223.0" mnemonicParsing="false" onAction="#switchToScenesimulator3" text="Bar/Cafe" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

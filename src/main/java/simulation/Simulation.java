@@ -1,3 +1,4 @@
+package simulation;
 import org.openimaj.video.capture.Device;
 import org.openimaj.video.capture.VideoCaptureException;
 import processing.sound.AudioIn;

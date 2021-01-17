@@ -1,0 +1,60 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+
+.button {
+	-fx-background-color:  #36BAC9;
+	-fx-background-size: 80.0;
+	-fx-background-repeat: repeat;
+	-fx-background-position: center;
+	-fx-font-weight:bold;
+	-fx-background-radius: 22
+	
+	
+}
+
+
+.button:hover{
+	-fx-font-weight:bold;
+	-fx-background-color:  #36BAC9;
+	-fx-background-radius: 22px;
+	-fx-font-size:16;
+	-fx-text-fill: rgb(240,255,255);
+	-fx-border-color: rgb(240,255,255);
+	-fx-border-radius: 20;
+	-fx-border-width: 3;
+
+	
+}
+
+.button:pressed{
+	
+	
+	-fx-font-weight:bold;
+	-fx-background-color: white;
+	-fx-background-radius: 22px;
+	-fx-font-size:16;
+	-fx-text-fill: rgb(240,255,255);
+	-fx-border-color: rgb(240,255,255);
+	-fx-border-radius: 20;
+	-fx-border-width: 3;
+	-fx-rotate: 10;
+	
+}
+
+
+.text-field{
+	
+	
+	-fx-font-weight:bold;
+	-fx-background-radius: 20px;
+	-fx-border-color: white;
+	-fx-border-vidth: 3;
+	-fx-rotate: 10;
+	-fx-text-fill: white;
+	-fx-background-color: white;
+	-fx-border-radius: 20
+	
+}
+
+
+
