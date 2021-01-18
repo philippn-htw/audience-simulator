@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.effect.Reflection?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="245.0" prefWidth="371.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ScreenController">
-   <children>
-      <ImageView fitHeight="486.0" fitWidth="734.0" layoutX="-172.0" layoutY="-59.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../icons/welcome_background.png" />
-         </image>
-      </ImageView>
-      <Button layoutX="161.0" layoutY="216.0" mnemonicParsing="false" onAction="#switchToScene2" text="Start " />
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity"
+	minHeight="-Infinity" minWidth="-Infinity" prefHeight="413.0"
+	prefWidth="397.0" xmlns="http://javafx.com/javafx/15.0.1"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="application.ScreenController">
+	<children>
+		<ImageView fitHeight="224.0" fitWidth="397.0"
+			pickOnBounds="true" preserveRatio="true">
+			<image>
+				<Image url="@../icons/PSBild.png" />
+			</image>
+			<effect>
+				<Reflection />
+			</effect>
+		</ImageView>
+		<Button layoutX="161.0" layoutY="216.0" mnemonicParsing="false"
+			onAction="#switchToScene2" prefHeight="20.0" prefWidth="70.0"
+			text="Start " />
+	</children>
 </AnchorPane>

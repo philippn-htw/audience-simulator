@@ -7,7 +7,8 @@
 	-fx-background-repeat: repeat;
 	-fx-background-position: center;
 	-fx-font-weight:bold;
-	-fx-background-radius: 22
+	-fx-background-radius: 22;
+	-fx-text-fill: rgb(240,255,255);
 	
 	
 }
@@ -56,5 +57,16 @@
 	
 }
 
+.playbox{
+		-fx-blackground-color: transparent;
+	
+}
+
+
+.playbox:hover{
+		-fx-border-color: #cdb38b;
+		-fx-background-color: #cdb38b;
+	
+}
 
 

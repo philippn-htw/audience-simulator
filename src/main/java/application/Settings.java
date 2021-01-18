@@ -9,6 +9,9 @@ import simulation.Simulation;
 public class Settings {
 	private static int audioDeviceIndex = 0;
 	private static int videoDeviceIndex = 0;
+	private static int sampleRateIndex = 0;
+	private static int videoResolutionIndex = 0;
+	private static int qualityIndex = 0;
 	private static SimLocation location = SimLocation.STADIUM;
 	private static Simulation sim;
 	private static boolean isRunning=false;
@@ -115,5 +118,65 @@ public class Settings {
 	 */
 	public static boolean getIsRunning() {
 		return isRunning;
+	}
+	
+	/**
+	 * Set the index of the choosen samplerate
+	 * @param index
+	 * @throws IllegalArgumentException if index is negative
+	 */
+	public static void setSamplerateIndex(int index) {
+		if(index<0) {
+			throw new IllegalArgumentException("invalid device index");
+		}
+		sampleRateIndex = index;
+	}
+	
+	/**
+	 * Get the index of the choosen asamplerate
+	 * @returns index of choosen samplerate
+	 */
+	public static int getSamplerateIndex() {
+		return sampleRateIndex;
+	}
+	
+	/**
+	 * Set the index of the choosen video resolution
+	 * @param index
+	 * @throws IllegalArgumentException if index is negative
+	 */
+	public static void setVideoResolutionIndex(int index) {
+		if(index<0) {
+			throw new IllegalArgumentException("invalid device index");
+		}
+		videoResolutionIndex = index;
+	}
+	
+	/**
+	 * Get the index of the choosen video resolution
+	 * @returns index of choosen video resolution
+	 */
+	public static int getVideoResolutionIndex() {
+		return videoResolutionIndex;
+	}
+	
+	/**
+	 * Set the index of the choosen  quality
+	 * @param index
+	 * @throws IllegalArgumentException if index is negative
+	 */
+	public static void setQualityIndex(int index) {
+		if(index<0) {
+			throw new IllegalArgumentException("invalid device index");
+		}
+		qualityIndex = index;
+	}
+	
+	/**
+	 * Get the index of the choosen quality
+	 * @returns index of choosen  quality
+	 */
+	public static int getQualityIndex() {
+		return qualityIndex;
 	}
 }

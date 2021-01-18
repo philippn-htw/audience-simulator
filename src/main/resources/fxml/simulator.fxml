@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ScreenController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #fff5ee#fff5ee;" styleClass="playbox" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ScreenController">
    <children>
       <Label layoutX="237.0" layoutY="36.0" text="Configure Simulation" />
       <Button layoutX="41.0" layoutY="23.0" mnemonicParsing="false" onAction="#switchToScene2" text="zurück" />
@@ -26,7 +26,7 @@
             <Image url="@../icons/club.jpeg" />
          </image>
       </ImageView>
-      <Button layoutX="212.0" layoutY="276.0" mnemonicParsing="false" onAction="#startStopSimulation" fx:id="startStopSimButton" text="Start Simulation" />
+      <Button layoutX="251.0" layoutY="317.0" mnemonicParsing="false" onAction="#startStopSimulation" fx:id="startStopSimButton" text="Start Simulation" />
       <Button layoutX="73.0" layoutY="221.0" mnemonicParsing="false" onAction="#switchToScenesimulator3" text="Cafe/Bar" />
       <Button layoutX="267.0" layoutY="248.0" mnemonicParsing="false" onAction="#switchToScenesimulator" text="Stadion" />
       <Button layoutX="473.0" layoutY="221.0" mnemonicParsing="false" onAction="#switchToScenesimulator2" prefHeight="27.0" prefWidth="55.0" text="Club" />

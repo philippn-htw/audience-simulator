@@ -6,7 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ScreenController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #fff5ee#fff5ee;" styleClass="playbox" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ScreenController">
    <children>
       <AnchorPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
          <children>
@@ -27,7 +27,7 @@
                   <Image url="@../icons/theater.jpeg" />
                </image>
             </ImageView>
-            <Button layoutX="212.0" layoutY="276.0" mnemonicParsing="false" onAction="#startStopSimulation" fx:id="startStopSimButton" text="Start Simulation" />
+            <Button layoutX="287.0" layoutY="340.0" mnemonicParsing="false" onAction="#startStopSimulation" fx:id="startStopSimButton" text="Start Simulation" />
             <Button layoutX="462.0" layoutY="217.0" mnemonicParsing="false" onAction="#switchToScenesimulator4" text="Theater" />
             <Button layoutX="267.0" layoutY="241.0" mnemonicParsing="false" onAction="#switchToScenesimulator3" text="Cafe/Bar" />
             <Button layoutX="72.0" layoutY="217.0" mnemonicParsing="false" onAction="#switchToScenesimulator2" text="Club" />

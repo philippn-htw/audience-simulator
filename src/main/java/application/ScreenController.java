@@ -49,6 +49,12 @@ public class ScreenController {
 	private ChoiceBox<String> videoInputDevice;
 	@FXML
 	private Button startStopSimButton;
+	@FXML
+	private ChoiceBox<String> sampleRateChoice;
+	@FXML
+	private ChoiceBox<String> videoResolutionChoice;
+	@FXML
+	private ChoiceBox<String> qualityChoice;
 
 	private MediaInterface audio = new AudioDevice();
 	private MediaInterface video = new VideoDevice();
@@ -262,12 +268,75 @@ public class ScreenController {
 		}
 	}
 	
+	
+	/**
+	 * Set the choicebox initialy to this index
+	 * @param choicebox
+	 * @param index
+	 * @throws IllegalArgumentException if index is negative.
+	 */
+	private void setInitialIndex(ChoiceBox<?> choicebox, int index) {
+		if(index<0) {
+			throw new IllegalArgumentException("Invalid Index.");
+		}
+		choicebox.getSelectionModel().clearAndSelect(index);
+	}
+	
 	/**
 	 * initializes Items. Called if a new fxml file is loaded.
 	 */
 	public void initialize() {
 		initializeAudioBox();
 		initializeVideoBox();
+		
+		//INITIALIZE SAMPLERATE CHOICEBOX
+		if(sampleRateChoice != null) {
+			sampleRateChoice.setItems(FXCollections.observableArrayList(
+				    "44100 kHz", "48000 kHz", "96000 kHz"));
+			setInitialIndex(sampleRateChoice,Settings.getSamplerateIndex());
+			
+			sampleRateChoice.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+					Settings.setSamplerateIndex(sampleRateChoice.getSelectionModel().getSelectedIndex());
+
+				}
+			});
+		}
+		
+		//INITIALIZE VIDEO RESOLUTION CHOICEBOX
+		if(videoResolutionChoice != null) {
+			videoResolutionChoice.setItems(FXCollections.observableArrayList(
+				    "640x480", "1080x720", "1920x1080"));
+			setInitialIndex(videoResolutionChoice,Settings.getVideoResolutionIndex());
+			
+			videoResolutionChoice.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+					Settings.setVideoResolutionIndex(videoResolutionChoice.getSelectionModel().getSelectedIndex());
+
+				}
+			});
+		}
+		
+		//INITIALIZE QUALITY CHOICEBOX
+		if(qualityChoice != null) {
+			qualityChoice.setItems(FXCollections.observableArrayList(
+				    "High", "Medium", "Low"));
+			setInitialIndex(qualityChoice,Settings.getQualityIndex());
+			
+			qualityChoice.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+					Settings.setQualityIndex(qualityChoice.getSelectionModel().getSelectedIndex());
+
+				}
+			});
+		}
+
 	}
 
 }

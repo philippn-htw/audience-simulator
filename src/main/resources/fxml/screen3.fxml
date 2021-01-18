@@ -4,63 +4,73 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ScreenController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ffdead;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ScreenController">
    <children>
-      <ChoiceBox fx:id="audioInputDevice" layoutX="265.0" layoutY="102.0" prefHeight="27.0" prefWidth="149.0" />
       <Label layoutX="255.0" layoutY="41.0" text="SETTINGS">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <Label layoutX="103.0" layoutY="104.0" text="Input Device">
-         <font>
-            <Font name="System Bold" size="17.0" />
-         </font>
-      </Label>
-      <Line endX="245.0" layoutX="192.0" layoutY="97.0" startX="-100.0" />
-      <CheckBox alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="100.0" layoutY="303.0" mnemonicParsing="false" text="Enable Video" textAlignment="RIGHT" />
-      <Label layoutX="103.0" layoutY="269.0" prefHeight="22.0" prefWidth="110.0" text="Input Device">
-         <font>
-            <Font name="System Bold" size="17.0" />
-         </font>
-      </Label>
-      <ChoiceBox fx:id="videoInputDevice" layoutX="265.0" layoutY="278.0" prefHeight="27.0" prefWidth="149.0" />
-      <Label layoutX="103.0" layoutY="151.0" prefHeight="22.0" prefWidth="110.0" text="Sample Rate">
-         <font>
-            <Font name="System Bold" size="17.0" />
-         </font>
-      </Label>
-      <ChoiceBox fx:id="samplerate" layoutX="265.0" layoutY="149.0" prefHeight="27.0" prefWidth="149.0" />
-      <TextField layoutX="92.0" layoutY="67.0" prefHeight="27.0" prefWidth="95.0" text="AUDIO">
-         <font>
-            <Font name="System Bold" size="13.0" />
-         </font>
-      </TextField>
-      <TextField layoutX="92.0" layoutY="187.0" prefHeight="27.0" prefWidth="95.0" text="VIDEO">
-         <font>
-            <Font name="System Bold" size="13.0" />
-         </font>
-      </TextField>
-      <Line endX="245.0" layoutX="192.0" layoutY="214.0" startX="-100.0" />
-      <ChoiceBox layoutX="265.0" layoutY="242.0" prefHeight="27.0" prefWidth="149.0" />
-      <Label layoutX="103.0" layoutY="231.0" prefHeight="22.0" prefWidth="110.0" text="Resolution">
-         <font>
-            <Font name="System Bold" size="17.0" />
-         </font>
-      </Label>
-      <Line endX="245.0" layoutX="192.0" layoutY="329.0" startX="-100.0" />
+      <Line endX="245.0" layoutX="192.0" layoutY="86.0" startX="-129.0" />
+      <Line endX="245.0" layoutX="192.0" layoutY="214.0" startX="-128.0" />
+      <Line endX="245.0" layoutX="192.0" layoutY="329.0" startX="-127.0" />
       <Label layoutX="103.0" layoutY="337.0" prefHeight="22.0" prefWidth="110.0" text="Quality">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
       </Label>
-      <ChoiceBox layoutX="265.0" layoutY="335.0" prefHeight="27.0" prefWidth="149.0" />
+      <ChoiceBox fx:id="qualityChoice" layoutX="263.0" layoutY="337.0" prefHeight="27.0" prefWidth="149.0" />
       <Button layoutX="76.0" layoutY="28.0" mnemonicParsing="false" onAction="#switchToScene2" text="zurück" />
+      <ImageView fitHeight="96.0" fitWidth="95.0" layoutX="8.0" layoutY="97.0" pickOnBounds="true" preserveRatio="true" />
+      <Pane layoutX="64.0" layoutY="217.0" prefHeight="112.0" prefWidth="373.0" styleClass="playbox">
+         <children>
+            <Label layoutX="77.0" layoutY="62.0" prefHeight="22.0" prefWidth="110.0" text="Input Device">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="69.0" fitWidth="122.0" layoutX="-12.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/iconcam.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="77.0" layoutY="28.0" prefHeight="22.0" prefWidth="110.0" text="Resolution">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="videoResolutionChoice" layoutX="198.0" layoutY="25.0" prefHeight="27.0" prefWidth="149.0" />
+            <ChoiceBox fx:id="videoInputDevice" layoutX="198.0" layoutY="62.0" prefHeight="27.0" prefWidth="149.0" />
+            <CheckBox fx:id="enableVideoCheck" alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutY="90.0" mnemonicParsing="false" text="Enable Video" textAlignment="RIGHT" />
+         </children>
+      </Pane>
+      <Pane layoutX="64.0" layoutY="98.0" prefHeight="112.0" prefWidth="373.0" styleClass="playbox">
+         <children>
+            <ImageView fitHeight="69.0" fitWidth="122.0" layoutX="-12.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/micpicclean.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="88.0" layoutY="28.0" text="Input Device">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+            </Label>
+            <Label layoutX="88.0" layoutY="62.0" prefHeight="22.0" prefWidth="110.0" text="Sample Rate">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="audioInputDevice" layoutX="198.0" layoutY="25.0" prefHeight="27.0" prefWidth="149.0" />
+            <ChoiceBox fx:id="sampleRateChoice" layoutX="198.0" layoutY="60.0" prefHeight="27.0" prefWidth="149.0" />
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

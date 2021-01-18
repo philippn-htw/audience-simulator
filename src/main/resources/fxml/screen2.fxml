@@ -11,20 +11,15 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ScreenController">
    <children>
-      <ImageView fitHeight="413.0" fitWidth="607.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="409.0" fitWidth="633.0" layoutX="-7.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../icons/sim_background.jpeg" />
          </image>
       </ImageView>
-      <Label layoutX="256.0" layoutY="37.0" text="GIGSIM" textFill="#ee6767">
-         <font>
-            <Font size="20.0" />
-         </font></Label>
-      <Button layoutX="260.0" layoutY="322.0" mnemonicParsing="false" onAction="#switchToScene1" text="Zurück" />
-      <Canvas height="200.0" layoutX="188.0" layoutY="112.0" width="200.0" />
-      <Circle fill="#ffcc1f" layoutX="151.0" layoutY="200.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="#ffcc1f" layoutX="408.0" layoutY="200.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-      <Button layoutX="115.0" layoutY="184.0" mnemonicParsing="false" onAction="#switchToScenesimulator" text="Simulator" />
-      <Button layoutX="372.0" layoutY="184.0" mnemonicParsing="false" onAction="#switchToScene3" text="Settings" />
+      <Circle fill="#ff9945bb" layoutX="162.0" layoutY="200.0" radius="68.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#fa6178be" layoutX="441.0" layoutY="201.0" radius="68.0" stroke="BLACK" strokeType="INSIDE" />
+      <Button layoutX="280.0" layoutY="268.0" mnemonicParsing="false" onAction="#switchToScene1" style="-fx-background-color: #36BAC9; -fx-background-radius: 22;" text="zurück" />
+      <Button layoutX="118.0" layoutY="184.0" mnemonicParsing="false" onAction="#switchToScenesimulator" style="-fx-background-color: #36BAC9; -fx-background-radius: 22; -fx-font-weight: bold;" text="SIMULATOR" />
+      <Button layoutX="402.0" layoutY="185.0" mnemonicParsing="false" onAction="#switchToScene3" style="-fx-background-color: #36BAC9; -fx-background-radius: 22; -fx-font-weight: bold; -fx-font-size: 14;" text="SETTINGS" />
    </children>
 </AnchorPane>
