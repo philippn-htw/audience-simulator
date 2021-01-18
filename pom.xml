@@ -89,7 +89,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>Main</mainClass>
+							<mainClass>simulation.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

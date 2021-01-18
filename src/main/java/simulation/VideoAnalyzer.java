@@ -96,6 +96,15 @@ public class VideoAnalyzer implements Runnable {
 		analysingRegion.setBounds(capture.getWidth()/4, 0, capture.getWidth() / 2, capture.getHeight()/2);
 	}
 	
+	
+	/** stops the capturing
+	 * 
+	 */
+	public void stopCapture() {
+		capture.stopCapture();
+		capture.close();
+	}
+	
 
 	/**
 	 * get the Distance between two RGB color vectors.
@@ -294,7 +303,7 @@ public class VideoAnalyzer implements Runnable {
 	/**
 	 * Display the capture
 	 */
-	public void displayCapture() {
+	public VideoDisplay<MBFImage> displayCapture() {
 		VideoDisplay<MBFImage> display = VideoDisplay.createVideoDisplay(capture);
 		
 
@@ -350,6 +359,8 @@ public class VideoAnalyzer implements Runnable {
 			public void afterUpdate(VideoDisplay<MBFImage> display) {
 			}
 		});
+		
+		return display;
 	}
 	
 	
@@ -379,7 +390,7 @@ public class VideoAnalyzer implements Runnable {
 	@Override
 	public void run() {
 		// Display for Test purposes
-		displayCapture();
+		VideoDisplay<MBFImage> display = displayCapture();
 		
 		int frameCount = 0;
 		//MBFImage frame;
@@ -387,6 +398,7 @@ public class VideoAnalyzer implements Runnable {
 		while (true) {
 			
 			if(Thread.interrupted()) {
+				display.close();
 				break;
 			}
 			
@@ -425,11 +437,15 @@ public class VideoAnalyzer implements Runnable {
 					//higher cycle count
 					frameCount++;
 				}
+				
+				if(Thread.interrupted()) {
+					display.close();
+				}
 
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				display.close();
+				break;
 			}
 		}
 

@@ -2,6 +2,7 @@ package simulation;
 import java.util.ArrayList;
 import java.util.List;
 
+import application.Settings;
 import processing.core.PApplet;
 import processing.sound.*;
 
