@@ -204,14 +204,12 @@ public class ScreenController {
 					(Device)video.getStream(Settings.getVideoDeviceIndex()),
 					Settings.getLocation());
 			
-			try {
-				sim.start();
+			boolean simStarted = sim.start();
+			
+			if(simStarted) {
 				Settings.setSim(sim);
 				Settings.setIsRunning(true);
 				startStopSimButton.setText("Stop Simulation");
-			} catch (VideoCaptureException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
 	}

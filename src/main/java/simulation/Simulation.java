@@ -28,22 +28,28 @@ public class Simulation {
 
     /**
      * startet alle Threads mit run-methoden der Analyzer
-     * @throws VideoCaptureException wird geworfen wenn?
+     * @returns true if simulation was able to start.
      */
-    public void start() throws VideoCaptureException {
-        vAnalyzer.startCapture();
-        vaThread = new Thread(vAnalyzer);
-        vaThread.start();
-        aaThread = new Thread(aAnalyzer);
-        aaThread.start();
-        baThread=new Thread (bAnalyzer);
-        baThread.start();
+    public boolean start() {
+        try {
+			vAnalyzer.startCapture();
+			vaThread = new Thread(vAnalyzer);
+	        vaThread.start();
+	        aaThread = new Thread(aAnalyzer);
+	        aaThread.start();
+	        baThread=new Thread (bAnalyzer);
+	        baThread.start();
+	        return true;
+		} catch (VideoCaptureException e) {
+			return false;
+		}
     }
 
     /**
      * interrupted alle threads und schließt alle player
      */
     public void stop()  {
+    	vAnalyzer.stopCapture();
         vaThread.interrupt();
         aaThread.interrupt();
         baThread.interrupt();

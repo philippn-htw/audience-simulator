@@ -78,6 +78,8 @@ public class Settings {
 		case 3:
 			location = SimLocation.BAR;
 		}
+		
+		switchLocations();
 	}
 	
 	/**
@@ -178,5 +180,14 @@ public class Settings {
 	 */
 	public static int getQualityIndex() {
 		return qualityIndex;
+	}
+	
+	/**
+	 * switches the location of a running simulation
+	 */
+	private static void switchLocations() {
+		if(sim != null) {
+			sim.switchLocation(location);
+		}
 	}
 }

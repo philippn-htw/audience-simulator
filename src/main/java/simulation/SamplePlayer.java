@@ -46,6 +46,10 @@ public class SamplePlayer extends PApplet {
     public void playAmbience()  {
         ambiencePlayer.loop();
     }
+    
+    private void stopAmbience() {
+    	ambiencePlayer.close();
+    }
 
     /**
      * spielt clapping, wenn shouldBeClapping true ist.
@@ -89,9 +93,10 @@ public class SamplePlayer extends PApplet {
      */
     public void switchLocation(SimLocation location)    {
         this.location=location;
+        this.stopAmbience();
         ambiencePlayer=minim.loadFile(location.getPath()+"ambience.mp3");
-        clappingPlayer=minim.loadSample(location.getPath()+"clap.mp3");
-        cheeringPlayer=minim.loadSample(location.getPath()+"cheer.mp3");
+        clappingPlayer=minim.loadSample(location.getPath()+"clapping_1.mp3");
+        cheeringPlayer=minim.loadSample(location.getPath()+"cheering_1.mp3");
         this.playAmbience();
     }
 }
